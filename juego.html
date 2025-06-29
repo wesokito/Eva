@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Juego Atrapa Corazones</title>
+  <style>
+    body {
+      background: linear-gradient(270deg, #ffb6c1, #c0809f, #ff69b4, #d0709a);
+      background-size: 800% 800%;
+      animation: gradientAnim 20s ease infinite;
+      font-family: 'Montserrat', Arial, sans-serif;
+      text-align: center;
+      padding-top: 50px;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    @keyframes gradientAnim {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    a button {
+      margin-bottom:15px;
+      padding:12px 30px;
+      font-size:1.2em;
+      border:none;
+      border-radius:8px;
+      background:#ff99cc;
+      color:white;
+      cursor:pointer;
+    }
+    #game {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffcee0cc;
+      padding: 20px;
+      border-radius: 15px;
+      width: 90vw;
+      max-width: 600px;
+      box-shadow: 0 0 10px #ff99cc;
+    }
+    #startGame, #stopGame {
+      padding:10px 20px;
+      border:none;
+      border-radius:5px;
+      color:#fff;
+      cursor:pointer;
+      font-size: 1.1em;
+      margin-right: 10px;
+    }
+    #startGame {
+      background:#ff69b4;
+    }
+    #stopGame {
+      background:#cc3366;
+    }
+    #heartContainer {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      border: 2px solid #ff99cc;
+      border-radius: 10px;
+      margin-top: 15px;
+      background: #ffe6f0;
+    }
+
+    /* Pop animación */
+    @keyframes pop {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    .pop {
+      animation: pop 0.4s forwards;
+    }
+
+    /* Mini corazones */
+    .mini-heart {
+      position: absolute;
+      font-size: 14px;
+      pointer-events: none;
+      animation: explode 0.6s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="eva.html">
+    <button>Volver ❤️</button>
+  </a>
+
+  <div id="game">
+    <h3>¡Atrapa los corazones! ❤️</h3>
+    <p>Puntaje: <span id="score">0</span></p>
+    <button id="startGame">Empezar</button>
+    <button id="stopGame" disabled>Parar</button>
+    <div id="heartContainer"></div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('startGame');
+    const stopBtn = document.getElementById('stopGame');
+    const heartContainer = document.getElementById('heartContainer');
+    const scoreSpan = document.getElementById('score');
+    let score = 0;
+    let gameInterval;
+    let gameTimeout;
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.innerText = '❤️';
+      heart.style.position = 'absolute';
+      heart.style.fontSize = '48px';
+heart.style.width = '48px';
+heart.style.height = '48px';
+heart.style.display = 'flex';
+heart.style.alignItems = 'center';
+heart.style.justifyContent = 'center';
+
+      heart.style.cursor = 'pointer';
+      heart.style.userSelect = 'none';
+      heart.style.top = '100%';
+
+      const maxLeft = heartContainer.clientWidth - 30; 
+      heart.style.left = Math.random() * maxLeft + 'px';
+
+      heart.style.transition = 'top 3s linear';
+      heartContainer.appendChild(heart);
+
+      void heart.offsetWidth;
+      heart.style.top = '0';
+
+     heart.addEventListener('click', () => {
+  score++;
+  scoreSpan.textContent = score;
+  spawnMiniHearts(heart.offsetLeft, heart.offsetTop);
+  heart.remove();
+
+  if (score === 25) {
+    setTimeout(() => {
+      alert('🥰 ¡25 corazones! Muy bien bebita, te amo muchisimo');
+    }, 100); // un mini delay para que no choque con otros eventos
+  }
+});
+
+      setTimeout(() => {
+        heart.remove();
+      }, 3000);
+    }
+
+    function spawnMiniHearts(x, y) {
+      const num = 8;
+      for (let i = 0; i < num; i++) {
+        const mini = document.createElement('div');
+        mini.className = 'mini-heart';
+        mini.textContent = '💖';
+       mini.style.left = `${x + 10}px`;
+mini.style.top = `${y + 10}px`;
+
+
+        const dx = (Math.random() - 0.5) * 100 + 'px';
+        const dy = (Math.random() - 0.5) * 100 + 'px';
+        mini.style.setProperty('--dx', dx);
+        mini.style.setProperty('--dy', dy);
+
+        heartContainer.appendChild(mini);
+        setTimeout(() => mini.remove(), 600);
+      }
+    }
+
+    function startGame() {
+      score = 0;
+      scoreSpan.textContent = score;
+      heartContainer.innerHTML = '';
+      clearInterval(gameInterval);
+      clearTimeout(gameTimeout);
+      gameInterval = setInterval(createHeart, 500);
+      gameTimeout = setTimeout(() => {
+        stopGame(true);
+      }, 15000);
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    }
+
+    function stopGame(finished = false) {
+      clearInterval(gameInterval);
+      clearTimeout(gameTimeout);
+
+      const hearts = heartContainer.querySelectorAll('div');
+      hearts.forEach(heart => {
+        heart.classList.add('pop');
+        heart.addEventListener('animationend', () => heart.remove());
+      });
+
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+
+      if (finished) {
+        alert('Juego terminado! Puntaje final: ' + score);
+      }
+    }
+
+    startBtn.addEventListener('click', startGame);
+    stopBtn.addEventListener('click', () => stopGame(false));
+  </script>
+
+</body>
+</html>
