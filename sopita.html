@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sopa de Letras para Eva 💖</title>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(270deg, #ffb6c1, #c0809f, #ff69b4, #d0709a);
+      background-size: 800% 800%;
+      animation: gradientAnim 20s ease infinite;
+      margin: 0; padding: 20px;
+      color: #ff3399;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      user-select: none; /* evita que se seleccione texto accidentalmente */
+    }
+
+    @keyframes gradientAnim {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .hearts-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      transform: rotate(45deg);
+      animation: float 10s linear infinite;
+      opacity: 0.6;
+      z-index: 0;
+      border-radius: 50% 50% 0 0;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      top: 0;
+      left: -10px;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(45deg);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-10vh) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 2.8em;
+      text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.8),
+        0 0 15px rgba(255, 255, 255, 0.6);
+      z-index: 1;
+    }
+
+    #grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(14, 30px);
+      grid-template-rows: repeat(14, 30px);
+      gap: 2px;
+      z-index: 1;
+    }
+
+    .cell {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.3em;
+      cursor: pointer;
+      color: #b33c72;
+      transition: background 0.3s, color 0.3s;
+      user-select: none;
+    }
+
+    .cell.selected {
+      background: #ff69b4;
+      color: white;
+    }
+
+    .cell.found {
+      font-weight: 800;
+      cursor: default;
+    }
+
+    #words {
+      margin-top: 25px;
+      font-size: 1.2em;
+      max-width: 90vw;
+      text-align: center;
+      z-index: 1;
+    }
+
+    #words span {
+      margin: 0 10px;
+      padding: 5px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #b33c72;
+      font-weight: 600;
+      transition: background 0.3s, color 0.3s;
+      user-select: none;
+      cursor: default;
+    }
+
+    #words span.found {
+      background: #ff3399;
+      color: white;
+      text-decoration: line-through;
+    }
+
+    #message {
+      margin-top: 30px;
+      font-size: 1.5em;
+      color: #fff;
+      text-shadow: 0 0 10px #ff3399;
+      min-height: 40px; /* para que no cambie la altura */
+      z-index: 1;
+    }
+
+    button.volver-btn {
+      margin-top: 40px;
+      background: #ff99cc;
+      border: none;
+      border-radius: 15px;
+      padding: 12px 30px;
+      font-size: 1.3em;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff66b2;
+      transition: background 0.3s;
+      z-index: 1;
+      user-select: none;
+    }
+
+    button.volver-btn:hover {
+      background: #ff66b2;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="hearts-bg"></div>
+
+  <h1>Sopa de Letras para Eva 💖</h1>
+  <div id="grid"></div>
+  <div id="words"></div>
+  <div id="message"></div>
+  <button class="volver-btn" onclick="window.location.href='eva.html'">Volver</button>
+
+  <script>
+    const palabras = ["AGUS","VALUTO","HERMOSA","LINDA","PRINCESA","ANIVERSARIO","AMOR","EVITA"];
+    const coloresPalabras = ["#ff3399", "#ff9900", "#00bfff", "#66cc66","#cc33ff", "#ffcc00", "#ff6666", "#33cccc"];
+    const FILAS = 14;
+    const COLUMNAS = 14;
+    const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let grid = Array.from({length: FILAS}, () => Array(COLUMNAS).fill(''));
+    let palabrasPosiciones = [];
+    let seleccion = [];
+
+    function crearGridVacia() {
+      for(let f = 0; f < FILAS; f++) {
+        for(let c = 0; c < COLUMNAS; c++) {
+          grid[f][c] = '';
+        }
+      }
+    }
+
+    function puedePonerPalabra(palabra, x, y, dx, dy) {
+      let endX = x + dx * (palabra.length - 1);
+      let endY = y + dy * (palabra.length - 1);
+      if(endX < 0 || endX >= COLUMNAS || endY < 0 || endY >= FILAS) return false;
+      for(let i = 0; i < palabra.length; i++) {
+        let letraActual = palabra.charAt(i);
+        let gridLetra = grid[y + dy*i][x + dx*i];
+        if(gridLetra !== '' && gridLetra !== letraActual) return false;
+      }
+      return true;
+    }
+
+    function ponerPalabra(palabra) {
+      let maxIntentos = 500;
+      const direcciones = [[1,0],[0,1],[1,1],[1,-1]];
+      while(maxIntentos--) {
+        const [dx, dy] = direcciones[Math.floor(Math.random()*direcciones.length)];
+        let x = Math.floor(Math.random()*COLUMNAS);
+        let y = Math.floor(Math.random()*FILAS);
+        if(puedePonerPalabra(palabra, x, y, dx, dy)) {
+          let posiciones = [];
+          for(let i = 0; i < palabra.length; i++) {
+            grid[y + dy*i][x + dx*i] = palabra.charAt(i);
+            posiciones.push({x: x + dx*i, y: y + dy*i});
+          }
+          palabrasPosiciones.push({palabra, posiciones, encontrada: false});
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function crearSopa() {
+      crearGridVacia();
+      palabrasPosiciones = [];
+      for(const palabra of palabras) ponerPalabra(palabra);
+      for(let f = 0; f < FILAS; f++) {
+        for(let c = 0; c < COLUMNAS; c++) {
+          if(grid[f][c] === '') {
+            grid[f][c] = letras.charAt(Math.floor(Math.random() * letras.length));
+          }
+        }
+      }
+    }
+
+    function mostrarGrilla() {
+      const gridDiv = document.getElementById('grid');
+      gridDiv.innerHTML = '';
+      for(let f = 0; f < FILAS; f++) {
+        for(let c = 0; c < COLUMNAS; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.x = c;
+          cell.dataset.y = f;
+          cell.textContent = grid[f][c];
+          gridDiv.appendChild(cell);
+        }
+      }
+    }
+
+    function mostrarPalabras() {
+      const wordsDiv = document.getElementById('words');
+      wordsDiv.innerHTML = '';
+      for(const p of palabrasPosiciones) {
+        const span = document.createElement('span');
+        span.textContent = p.palabra;
+        if(p.encontrada) span.classList.add('found');
+        wordsDiv.appendChild(span);
+      }
+    }
+
+    function obtenerCelda(x,y) {
+      return document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+    }
+
+    function limpiarSeleccion() {
+      seleccion.forEach(({x,y}) => {
+        let cel = obtenerCelda(x,y);
+        if(cel && !cel.classList.contains('found')) cel.classList.remove('selected');
+      });
+      seleccion = [];
+    }
+
+    function esSeleccionValida(inicio, fin) {
+      let dx = fin.x - inicio.x;
+      let dy = fin.y - inicio.y;
+      let longitud = Math.max(Math.abs(dx), Math.abs(dy)) + 1;
+      let pasoX = dx === 0 ? 0 : dx / Math.abs(dx);
+      let pasoY = dy === 0 ? 0 : dy / Math.abs(dy);
+      return (pasoX === 0 || pasoY === 0 || Math.abs(pasoX) === Math.abs(pasoY)) && longitud > 1;
+    }
+
+    function obtenerPosiciones(inicio, fin) {
+      let dx = fin.x - inicio.x;
+      let dy = fin.y - inicio.y;
+      let longitud = Math.max(Math.abs(dx), Math.abs(dy)) + 1;
+      let pasoX = dx === 0 ? 0 : dx / Math.abs(dx);
+      let pasoY = dy === 0 ? 0 : dy / Math.abs(dy);
+      let posiciones = [];
+      for(let i = 0; i < longitud; i++) {
+        posiciones.push({x: inicio.x + pasoX*i, y: inicio.y + pasoY*i});
+      }
+      return posiciones;
+    }
+
+    function obtenerPalabraDePosiciones(posiciones) {
+      return posiciones.map(({x,y}) => grid[y][x]).join('');
+    }
+
+    function esPalabraValida(palabra) {
+      palabra = palabra.toUpperCase();
+      for(const p of palabrasPosiciones) {
+        if(!p.encontrada && (palabra === p.palabra || palabra.split('').reverse().join('') === p.palabra)) {
+          return p;
+        }
+      }
+      return null;
+    }
+
+    // Explosión de corazones al encontrar palabra
+    function explosionCorazones(posiciones, color) {
+      const body = document.body;
+
+      posiciones.forEach(({x,y}) => {
+        const celda = obtenerCelda(x,y);
+        if (!celda) return;
+
+        for (let i = 0; i < 5; i++) {  // 5 corazones por letra
+          const heart = document.createElement('div');
+          heart.classList.add('heart');
+          heart.style.position = 'absolute';
+          heart.style.width = '15px';
+          heart.style.height = '15px';
+          heart.style.background = color;
+          heart.style.borderRadius = '50% 50% 0 0';
+          heart.style.transform = 'rotate(45deg)';
+          heart.style.pointerEvents = 'none';
+          heart.style.zIndex = 10;
+
+          // Posicionar en el centro de la celda con pequeño random para que no queden todos juntos
+          const rect = celda.getBoundingClientRect();
+          heart.style.left = rect.left + rect.width / 2 + (Math.random()*20 - 10) + 'px';
+          heart.style.top = rect.top + rect.height / 2 + (Math.random()*20 - 10) + 'px';
+
+          // Animación con keyframes dinámicos
+          const animName = `explosion${Math.floor(Math.random() * 10000)}`;
+          const animDuration = 1000 + Math.random() * 500;
+
+          const styleSheet = document.styleSheets[0];
+          const keyframes = `
+            @keyframes ${animName} {
+              0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(45deg);
+              }
+              100% {
+                opacity: 0;
+                transform: translate(${(Math.random()*100 - 50)}px, -${Math.random()*100 + 50}px) rotate(${Math.random()*360}deg);
+              }
+            }
+          `;
+          styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+
+          heart.style.animation = `${animName} ${animDuration}ms forwards ease-out`;
+
+          body.appendChild(heart);
+
+          setTimeout(() => {
+            heart.remove();
+          }, animDuration);
+        }
+      });
+    }
+
+    let seleccionando = false;
+    let seleccionInicio = null;
+
+    function manejarClickCelda(e) {
+      const x = parseInt(e.target.dataset.x);
+      const y = parseInt(e.target.dataset.y);
+      if(!seleccionando) {
+        seleccionando = true;
+        seleccionInicio = {x, y};
+        limpiarSeleccion();
+        seleccion.push({x,y});
+        e.target.classList.add('selected');
+        document.getElementById('message').textContent = ''; // borro mensaje anterior
+      } else {
+        const fin = {x, y};
+        if(esSeleccionValida(seleccionInicio, fin)) {
+          const posicionesSeleccionadas = obtenerPosiciones(seleccionInicio, fin);
+          const palabraFormada = obtenerPalabraDePosiciones(posicionesSeleccionadas);
+          const palabraEncontrada = esPalabraValida(palabraFormada);
+          if(palabraEncontrada) {
+            palabraEncontrada.encontrada = true;
+            const colorIndex = palabras.findIndex(p => p === palabraEncontrada.palabra);
+            const color = coloresPalabras[colorIndex % coloresPalabras.length];
+            posicionesSeleccionadas.forEach(({x,y}) => {
+              const cel = obtenerCelda(x,y);
+              if(cel) {
+                cel.classList.add('found');
+                cel.classList.remove('selected');
+                cel.style.background = color;
+                cel.style.color = "white";
+                cel.style.cursor = 'default';
+              }
+            });
+
+            explosionCorazones(posicionesSeleccionadas, color);
+
+            document.getElementById('message').textContent = `¡Encontraste "${palabraEncontrada.palabra}"! ❤️`;
+            mostrarPalabras();
+            if(palabrasPosiciones.every(p => p.encontrada)) {
+              document.getElementById('message').textContent = "¡Felicitaciones! Encontraste todas las palabras ❤️🎉";
+            }
+          } else {
+            document.getElementById('message').textContent = "No está esa palabra, seguí buscando...";
+            limpiarSeleccion();
+          }
+        } else {
+          document.getElementById('message').textContent = "Seleccioná en línea recta horizontal, vertical o diagonal.";
+          limpiarSeleccion();
+        }
+        seleccionando = false;
+        seleccionInicio = null;
+      }
+    }
+
+    function agregarEventos() {
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach(c => c.addEventListener('click', manejarClickCelda));
+    }
+
+    function crearCorazones() {
+      const bg = document.querySelector('.hearts-bg');
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.animationDelay = `${Math.random() * 10}s`;
+        heart.style.background = `hsl(${Math.random() * 360}, 70%, 80%)`;
+        heart.style.opacity = Math.random() * 0.5 + 0.3;
+        let size = Math.random() * 15 + 10;
+        heart.style.width = heart.style.height = `${size}px`;
+        bg.appendChild(heart);
+      }
+    }
+
+    crearSopa();
+    mostrarGrilla();
+    mostrarPalabras();
+    agregarEventos();
+    crearCorazones();
+  </script>
+</body>
+</html>

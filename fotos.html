@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Recuerdos contigo 💖</title>
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(270deg, #ffb6c1, #c0809f, #ff69b4, #d0709a);
+    background-size: 800% 800%;
+    animation: gradientAnim 20s ease infinite;
+    margin: 0;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  @keyframes gradientAnim {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+
+  h2 {
+    color: #ff3399;
+    font-size: 2.5em;
+    margin: 0 0 30px 0;
+    text-shadow:
+      0 0 8px rgba(255, 255, 255, 0.8),
+      0 0 15px rgba(255, 255, 255, 0.6);
+    text-align: center;
+  }
+
+  .gallery-wrapper {
+    max-width: 600px;
+    width: 90vw;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 0 20px #ff99ccaa;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .gallery-container {
+    position: relative;
+    width: 80vw;
+    max-width: 600px;
+    height: 60vh;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 0 20px #ff99ccaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+    user-select: none;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Botones flecha con posición absoluta */
+  button.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff99cc;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 12px #ff66b2;
+    transition: background 0.3s;
+    user-select: none;
+  }
+
+  button.nav-btn:hover {
+    background: #ff66b2;
+  }
+
+  #prevBtn {
+    left: 10px;
+  }
+
+  #nextBtn {
+    right: 10px;
+  }
+
+  .volver-btn {
+    margin-top: 30px;
+    padding: 12px 30px;
+    font-size: 1.2em;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #ff66b2;
+    border: none;
+    cursor: pointer;
+    background: #ff99cc;
+    color: white;
+    user-select: none;
+    transition: background 0.3s;
+  }
+
+  .volver-btn:hover {
+    background: #ff66b2;
+  }
+</style>
+</head>
+<body>
+
+<h2>Algunos recuerdos contigo 💖</h2>
+
+<div class="gallery-wrapper">
+  <div class="gallery-container">
+    <button id="prevBtn" class="nav-btn" aria-label="Anterior">&#x25C0;</button>  <!-- ◀ -->
+    <img id="foto" src="https://i.imgur.com/t8SKySO.jpeg" alt="Recuerdo con Eva" />
+    <button id="nextBtn" class="nav-btn" aria-label="Siguiente">&#x25B6;</button>  <!-- ▶ -->
+  </div>
+
+  <button class="volver-btn" onclick="window.location.href='eva.html'">Volver</button>
+</div>
+
+<script>
+  const fotos = [
+    "https://i.imgur.com/t8SKySO.jpeg",
+    "https://i.imgur.com/kPh7bvt.jpeg",
+    "https://i.imgur.com/CaHKS7u.jpeg",
+    "https://i.imgur.com/DDhBNFB.jpeg",
+    "https://i.imgur.com/qtyNFjQ.jpeg",
+    "https://i.imgur.com/BQ45Cnb.jpeg",
+    "https://i.imgur.com/5WSWpVc.jpeg",
+    "https://i.imgur.com/NTu6RA5.jpeg"
+  ];
+
+  let indice = 0;
+  const imgElemento = document.getElementById('foto');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function mostrarFoto(i) {
+    indice = (i + fotos.length) % fotos.length;
+    imgElemento.src = fotos[indice];
+  }
+
+  prevBtn.addEventListener('click', () => mostrarFoto(indice - 1));
+  nextBtn.addEventListener('click', () => mostrarFoto(indice + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') mostrarFoto(indice - 1);
+    if (e.key === 'ArrowRight') mostrarFoto(indice + 1);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cosas random que pasaron desde que estamos juntos 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(270deg, #ffb6c1, #c0809f, #ff69b4, #d0709a);
+      background-size: 800% 800%;
+      animation: gradientAnim 20s ease infinite;
+      font-family: 'Montserrat', Arial, sans-serif;
+      color: #ff3399;
+      text-align: center;
+      margin: 0;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      text-shadow:
+        0 0 10px white,
+        0 0 20px white,
+        0 0 30px white;
+    }
+
+    p {
+      font-size: 1.3em;
+      max-width: 700px;
+      margin: 15px auto;
+      background: rgba(255,182,193,0.7);
+      padding: 15px 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px #ff66b2aa;
+    }
+
+    /* Estilos para los números */
+    strong.number-wide {
+      display: inline-block;
+      min-width: 140px; /* más ancho para números grandes */
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    strong.number-narrow {
+      display: inline-block;
+      min-width: 80px; /* menos ancho para números cortos */
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.2em;
+      background-color: #ff99cc;
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 30px;
+      animation: pulse 2s infinite;
+      cursor: pointer;
+    }
+
+    a:hover {
+      background-color: #ff66b2;
+    }
+
+    @keyframes gradientAnim {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        background-color: #ff99cc;
+      }
+      50% {
+        transform: scale(1.1);
+        background-color: #ff66b2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Cosas random que pasaron desde que estamos juntos 💖</h1>
+
+  <p>Tu corazón latió unas <strong id="latidos" class="number-wide"></strong> veces y bombeó <strong id="litrosSangre" class="number-wide"></strong> litros de sangre.</p>
+
+  <p>Tu cuerpo produjo alrededor de <strong id="celulasSangre" class="number-wide"></strong> glóbulos rojos.</p>
+
+  <p>Respiramos juntos unas <strong id="respiros" class="number-narrow"></strong> veces.</p>
+
+  <p>Parpadeaste aproximadamente <strong id="parpadeos" class="number-narrow"></strong> veces.</p>
+
+  <p>Pasamos juntos unas <strong id="horasDormidos" class="number-narrow"></strong> horas durmiendo, descansando para seguir amándonos.</p>
+
+  <a href="eva.html">Volver</a>
+
+  <script>
+    const inicio = new Date('2024-12-01T14:00:00');
+
+    function actualizarDatos() {
+      const ahora = new Date();
+      const diffMs = ahora - inicio;
+
+      if(diffMs < 0){
+        document.body.innerHTML = '<h1>La historia todavía no empezó 😘</h1>';
+        return;
+      }
+
+      const segundos = Math.floor(diffMs / 1000);
+      const minutos = segundos / 60;
+      const horas = minutos / 60;
+      const dias = horas / 24;
+
+      const latidosPorMinuto = 70;
+      const volumenSangrePorLatido = 0.075;
+      const globulosPorLitro = 5e12;
+      const parpadeosPorMinuto = 15;
+      const respirosPorMinuto = 16;
+      const horasDormidasPorDia = 8;
+
+      const minutosJuntos = minutos;
+      const latidos = Math.round(latidosPorMinuto * minutosJuntos);
+      const litrosBombeadosNum = latidos * volumenSangrePorLatido;
+      const litrosBombeados = litrosBombeadosNum.toFixed(0);
+      const celulasSangre = Math.round(litrosBombeadosNum * globulosPorLitro);
+      const respiros = Math.round(respirosPorMinuto * minutosJuntos);
+      const parpadeos = Math.round(parpadeosPorMinuto * minutosJuntos);
+      const horasDormidas = Math.round(dias * horasDormidasPorDia);
+
+      document.getElementById('latidos').innerText = latidos.toLocaleString('es-UY');
+      document.getElementById('litrosSangre').innerText = litrosBombeados.toLocaleString('es-UY') + ' L';
+      document.getElementById('celulasSangre').innerText = celulasSangre.toLocaleString('es-UY');
+      document.getElementById('respiros').innerText = respiros.toLocaleString('es-UY');
+      document.getElementById('parpadeos').innerText = parpadeos.toLocaleString('es-UY');
+      document.getElementById('horasDormidos').innerText = horasDormidas.toLocaleString('es-UY');
+    }
+
+    actualizarDatos();
+    setInterval(actualizarDatos, 1000);
+  </script>
+</body>
+</html>

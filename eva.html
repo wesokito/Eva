@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <title>Para Eva 💖</title>
-  <!-- Link para usar Montserrat desde Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
   <style>
- h1 {
-  color: white;
-  font-size: 3em;
-  text-shadow:
-    0 0 10px white,
-    0 0 20px white,
-    0 0 30px white,
-    0 0 40px white,
-    0 0 50px white;
-}
-
+    h1 {
+      color: white;
+      font-size: 3em;
+      text-shadow:
+        0 0 10px white,
+        0 0 20px white,
+        0 0 30px white,
+        0 0 40px white,
+        0 0 50px white;
+    }
 
     body {
       background: linear-gradient(270deg, #ffb6c1, #c0809f, #ff69b4, #d0709a);
@@ -25,10 +23,16 @@
       font-family: 'Montserrat', Arial, sans-serif;
       text-align: center;
       padding-top: 50px;
-      overflow: hidden;
-      position: relative;
       margin: 0;
-      height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #container {
+      max-width: 100%;
+      padding: 0 15px 40px;
+      box-sizing: border-box;
+      margin: 0 auto;
+      display: none; /* oculto hasta que se pulse entrar o se detecte que ya se vio */
     }
 
     @keyframes gradientAnim {
@@ -37,19 +41,15 @@
       100% {background-position: 0% 50%;}
     }
 
-    h1 {
-      color: #ff3399;
-      font-size: 3em;
-    }
-
     img {
       width: 250px;
+      max-width: 90vw;
       border-radius: 20px;
       margin-top: 20px;
       box-shadow: 0 0 15px #ff99cc;
     }
 
-    a button {
+    a button, #btnColor {
       margin-top: 30px;
       padding: 10px 20px;
       font-size: 1.2em;
@@ -58,13 +58,15 @@
       border-radius: 10px;
       cursor: pointer;
       color: white;
+      animation: pulse 2s infinite;
+      display: inline-block;
+      white-space: nowrap;
     }
 
-    a button:hover {
+    a button:hover, #btnColor:hover {
       background-color: #ff66b2;
     }
 
-    /* CORAZONES FLOTANTES */
     .heart {
       position: absolute;
       color: #ff69b4;
@@ -85,36 +87,87 @@
       }
     }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    background-color: #ff99cc;
-  }
-  50% {
-    transform: scale(1.1);
-    background-color: #ff66b2;
-  }
-}
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        background-color: #ff99cc;
+      }
+      50% {
+        transform: scale(1.1);
+        background-color: #ff66b2;
+      }
+    }
 
-a button {
-  animation: pulse 2s infinite;
-}
+    #contador {
+      font-family: 'Montserrat', sans-serif; 
+      font-size: 1.5em; 
+      color: #ff3399; 
+      margin-top: 20px; 
+      padding: 10px 20px; 
+      background: rgb(255, 182, 193);
+      border-radius: 15px;
+      box-shadow: 0 4px 10px #ff66b2aa;
+      text-align: center;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    #pantallaBienvenida {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffe4ec;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      transition: opacity 1s ease;
+    }
   </style>
-
-
-
-
 </head>
 <body>
-  <h1>Te amo, Eva ❤️</h1>
-  <p>FELICES 7 MESES AMOR DE MI VIDA</p>
-  <img src="https://i.imgur.com/Bfrprsg.jpeg" alt="Eva hermosa" />
-  <br />
-  <a href="carta.html">
-    <button>Cartita</button>
-  </a>
 
-  <!-- Script para crear corazones -->
+  <div id="pantallaBienvenida">
+    <h2 style="color: #ff3399; font-size: 2em;">Hola mi amor 💖</h2>
+    <p style="max-width: 80%; font-size: 1.2em; color: #d94f9f;">Te hice esta pagina, por los 7 meses que llevamos juntos. Y porque tu regalito aun esta en proceso, mi amor. Te amo💕</p>
+    <button id="btnEntrar" style="
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      background-color: #ff99cc;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      animation: pulse 2s infinite;
+    ">Entrar 💌</button>
+  </div>
+
+  <div id="container">
+    <h1>Te amo, Eva ❤️</h1>
+    <p>FELICES 7 MESES AMOR DE MI VIDA</p>
+    <img src="https://i.imgur.com/Bfrprsg.jpeg" alt="Eva hermosa" />
+    <br />
+    <a href="carta.html"><button>Cartita</button></a>
+    <a href="juego.html"><button>Jueguito ❤️</button></a>
+    <a href="fotos.html"><button>Recuerdos 💖</button></a>
+    <a href="sopita.html"><button>Sopa de letras 💌</button></a>
+    <br />
+    <a href="asdasd.html"><button>Cosas que pasaron desde que estamos juntos</button></a>
+    <button id="btnColor">Cambiar color fondo 🎨</button>
+    <div id="contador">
+      Cargando tiempo juntos...
+    </div>
+  </div>
+
   <script>
     function crearCorazon() {
       const corazon = document.createElement("div");
@@ -123,181 +176,53 @@ a button {
       corazon.style.fontSize = (Math.random() * 20 + 10) + "px";
       corazon.innerText = "❤️";
       document.body.appendChild(corazon);
-
-      setTimeout(() => {
-        corazon.remove();
-      }, 5000);
+      setTimeout(() => corazon.remove(), 5000);
     }
+    setInterval(crearCorazon, 300);
 
-    setInterval(crearCorazon, 300); // cada 300ms aparece un nuevo corazón
+    const inicio = new Date('2024-12-01T14:00:00');
+    function actualizarContador() {
+      const ahora = new Date();
+      let diff = ahora - inicio;
+      if(diff < 0) {
+        document.getElementById('contador').innerText = "Todavía no empezó nuestra historia 😘";
+        return;
+      }
+      const segundos = Math.floor(diff / 1000) % 60;
+      const minutos = Math.floor(diff / (1000 * 60)) % 60;
+      const horas = Math.floor(diff / (1000 * 60 * 60)) % 24;
+      const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+      document.getElementById('contador').innerText =
+        `Llevamos juntos ${dias} días, ${horas} horas, ${minutos} minutos y ${segundos} segundos ❤️`;
+    }
+    actualizarContador();
+    setInterval(actualizarContador, 1000);
+
+    const coloresBonitos = ["#a2d4f4", "#6ea8d8", "#3b78e7", "#2e5aac", "#ffb6c1", "#ff69b4", "#ff1493"];
+    const btnColor = document.getElementById('btnColor');
+    btnColor.addEventListener('click', () => {
+      const c1 = coloresBonitos[Math.floor(Math.random() * coloresBonitos.length)];
+      let c2 = coloresBonitos[Math.floor(Math.random() * coloresBonitos.length)];
+      while(c2 === c1) c2 = coloresBonitos[Math.floor(Math.random() * coloresBonitos.length)];
+      document.body.style.background = `linear-gradient(270deg, ${c1}, ${c2})`;
+      document.body.style.backgroundSize = "400% 400%";
+      document.body.style.animation = "gradientAnim 20s ease infinite";
+    });
+
+    const pantalla = document.getElementById('pantallaBienvenida');
+    const container = document.getElementById('container');
+    const btnEntrar = document.getElementById('btnEntrar');
+
+   
+
+    btnEntrar.addEventListener('click', () => {
+      pantalla.style.opacity = 0;
+      setTimeout(() => {
+        pantalla.style.display = 'none';
+        container.style.display = 'block';
+      }, 1000);
+      localStorage.setItem('bienvenidaVista', 'true');
+    });
   </script>
 </body>
 </html>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    let lastTime = 0;
-
-    function crearCorazon(x, y) {
-      const corazon = document.createElement("div");
-      corazon.classList.add("heart");
-      corazon.style.left = x + "px";
-      corazon.style.top = y + "px";
-      corazon.style.fontSize = (Math.random() * 20 + 10) + "px";
-      corazon.style.opacity = "0.3"; // más transparente
-      corazon.innerText = "❤️";
-      document.body.appendChild(corazon);
-
-      corazon.animate([
-        { transform: 'translateY(0) scale(1)', opacity: 0.3 },
-        { transform: 'translateY(-120px) scale(2)', opacity: 0 }
-      ], {
-        duration: 2500,
-        easing: 'ease-out',
-        fill: 'forwards'
-      });
-
-      setTimeout(() => {
-        corazon.remove();
-      }, 2500);
-    }
-
-    document.body.addEventListener("mousemove", (e) => {
-      const now = Date.now();
-      if (now - lastTime > 200) { // salen cada 200ms aprox, menos cantidad
-        crearCorazon(e.clientX, e.clientY);
-        lastTime = now;
-      }
-    });
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    let lastTime = 0;
-
-    function crearCorazon(x, y, size = null, opacity = 0.3) {
-      const corazon = document.createElement("div");
-      corazon.classList.add("heart");
-      corazon.style.left = x + "px";
-      corazon.style.top = y + "px";
-      corazon.style.opacity = opacity;
-      corazon.style.fontSize = (size !== null ? size : (Math.random() * 20 + 10)) + "px";
-      corazon.innerText = "❤️";
-      document.body.appendChild(corazon);
-
-      corazon.animate([
-        { transform: 'translateY(0) scale(1)', opacity: opacity },
-        { transform: 'translateY(-120px) scale(2)', opacity: 0 }
-      ], {
-        duration: 2500,
-        easing: 'ease-out',
-        fill: 'forwards'
-      });
-
-      setTimeout(() => {
-        corazon.remove();
-      }, 2500);
-    }
-
-    // Corazones al mover mouse (menos frecuentes y transparentes)
-    document.body.addEventListener("mousemove", (e) => {
-      const now = Date.now();
-      if (now - lastTime > 200) {
-        crearCorazon(e.clientX, e.clientY);
-        lastTime = now;
-      }
-    });
-
-    // Mini explosión al hacer click
-    document.body.addEventListener("click", (e) => {
-      const cantidad = 20;
-      for (let i = 0; i < cantidad; i++) {
-        crearConfetiCorazon(e.clientX, e.clientY);
-      }
-    });
-
-    function crearConfetiCorazon(x, y) {
-      const confeti = document.createElement("div");
-      confeti.classList.add("heart");
-      confeti.style.position = "fixed";
-      confeti.style.left = x + "px";
-      confeti.style.top = y + "px";
-      confeti.style.fontSize = (Math.random() * 25 + 15) + "px";
-      confeti.style.opacity = 1;
-      confeti.style.zIndex = 9999;
-      confeti.innerText = "❤️";
-      document.body.appendChild(confeti);
-
-      const animX = (Math.random() - 0.5) * 300;
-      const animY = (Math.random() - 0.5) * 300;
-
-      confeti.animate([
-        { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
-        { transform: `translate(${animX}px, ${animY}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-      ], {
-        duration: 1200 + Math.random() * 800,
-        easing: 'ease-out',
-        fill: 'forwards'
-      });
-
-      setTimeout(() => {
-        confeti.remove();
-      }, 2000);
-    }
-  });
-</script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const urlImagen = 'https://i.imgur.com/Bfrprsg.jpeg'; // la imagen de Eva
-    const cantidad = 40; // cuántas copias simultáneas
-    const widthMax = 80; // tamaño máximo en px
-    const widthMin = 30; // tamaño mínimo en px
-
-    function crearParticula() {
-      const particula = document.createElement("img");
-      particula.src = urlImagen;
-      particula.style.position = "fixed";
-      particula.style.left = Math.random() * window.innerWidth + "px";
-      particula.style.width = (Math.random() * (widthMax - widthMin) + widthMin) + "px";
-      particula.style.opacity = 0.15 + Math.random() * 0.2;
-      particula.style.pointerEvents = "none";
-      particula.style.zIndex = 0;
-      particula.style.userSelect = "none";
-      particula.style.filter = "brightness(0.9)"; // para que no esté muy brillante
-
-      document.body.appendChild(particula);
-
-      const duracion = 6000 + Math.random() * 4000; // 6-10 seg
-
-      const animX = (Math.random() - 0.5) * 200; // movimiento lateral
-      const animY = - (window.innerHeight + 100); // sube por toda la pantalla + margen
-
-      particula.animate([
-        { transform: 'translate(0, 0)', opacity: particula.style.opacity },
-        { transform: `translate(${animX}px, ${animY}px)`, opacity: 0 }
-      ], {
-        duration: duracion,
-        easing: 'linear',
-        fill: 'forwards'
-      });
-
-      setTimeout(() => {
-        particula.remove();
-      }, duracion);
-    }
-
-    // Cada 200ms creamos una nueva partícula
-    setInterval(() => {
-      if(document.hidden) return; // para no crear si la pestaña está en segundo plano
-      crearParticula();
-    }, 200);
-  });
-</script>
-
-<a href="juego.html">
-  <button style="margin-top: 20px; padding: 10px 20px; font-size: 1.1em; border-radius: 10px; border: none; background: #ff99cc; color: white; cursor: pointer;">
-    Jueguito ❤️
-  </button>
-</a>
-
